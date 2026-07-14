@@ -40,6 +40,7 @@
             overflow-x: hidden;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            transition: background .4s ease, color .4s ease;
         }
         ::selection {
             background: var(--primary);
@@ -105,7 +106,102 @@
         }
 
         /* ──────────────────────────────────────────────────────────────
-           SCROLL PROGRESS
+           LIGHT MODE OVERRIDES (from 2.html)
+        ────────────────────────────────────────────────────────────── */
+        body.light-mode {
+            --bg: #F0F4F8;
+            --text: #0F172A;
+            --muted: #64748B;
+            --border: rgba(0, 0, 0, .1);
+            --shadow: 0 20px 50px rgba(0, 0, 0, .12);
+        }
+        body.light-mode .header.scrolled {
+            background: rgba(240, 244, 248, .95) !important;
+        }
+        body.light-mode .hero::before {
+            background: radial-gradient(circle, rgba(245, 158, 11, .14), transparent 70%);
+        }
+        body.light-mode .stat,
+        body.light-mode .hero-badge,
+        body.light-mode .feature-card,
+        body.light-mode .project-card,
+        body.light-mode .tool-item,
+        body.light-mode .testimonial-card,
+        body.light-mode .cert-card,
+        body.light-mode .calendly-card {
+            background: rgba(255, 255, 255, .75);
+            backdrop-filter: blur(8px);
+        }
+        body.light-mode .testimonial-card blockquote {
+            color: #334155;
+        }
+        body.light-mode .mobile-menu-btn {
+            color: var(--text);
+        }
+        body.light-mode .service-toggle {
+            color: var(--text);
+        }
+        body.light-mode .hire-btn {
+            color: var(--text);
+        }
+        body.light-mode .logo {
+            color: var(--text);
+        }
+        body.light-mode .nav a {
+            color: #475569;
+        }
+        body.light-mode .nav a:hover {
+            color: var(--text);
+        }
+        body.light-mode .theme-toggle {
+            background: rgba(255, 255, 255, .6);
+            border-color: rgba(0, 0, 0, .15);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+           THEME TOGGLE BUTTON (from 2.html)
+        ────────────────────────────────────────────────────────────── */
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .04);
+            color: var(--text);
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all .35s cubic-bezier(.22, 1, .36, 1);
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(245, 158, 11, .15), transparent 70%);
+            opacity: 0;
+            transition: opacity .3s;
+        }
+        .theme-toggle:hover::before {
+            opacity: 1;
+        }
+        .theme-toggle:hover {
+            border-color: var(--primary);
+            transform: rotate(22deg) scale(1.1);
+            box-shadow: 0 0 18px rgba(245, 158, 11, .25);
+        }
+        .theme-toggle .icon-wrap {
+            display: inline-block;
+            transition: transform .45s cubic-bezier(.22, 1, .36, 1);
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+           SCROLL PROGRESS (shimmer from 2.html)
         ────────────────────────────────────────────────────────────── */
         #scroll-progress {
             position: fixed;
@@ -113,9 +209,19 @@
             left: 0;
             height: 3px;
             width: 0%;
-            background: var(--primary);
+            background: linear-gradient(90deg, var(--primary), #fbbf24, var(--primary));
+            background-size: 200% 100%;
             z-index: 99999;
             transition: width .1s linear;
+            animation: shimmer 2s linear infinite;
+        }
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
         }
 
         /* ──────────────────────────────────────────────────────────────
@@ -146,6 +252,7 @@
         }
         #backToTop:hover {
             transform: translateY(-4px);
+            box-shadow: 0 20px 50px rgba(245, 158, 11, .35);
         }
 
         /* ──────────────────────────────────────────────────────────────
@@ -171,6 +278,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 12px;
         }
         .logo {
             font-size: 1.1rem;
@@ -226,6 +334,11 @@
             color: #111;
             border-color: var(--primary);
         }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -233,6 +346,109 @@
             font-size: 1.6rem;
             color: white;
             cursor: pointer;
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+           SOAP BUBBLES (from 2.html)
+        ────────────────────────────────────────────────────────────── */
+        .bubbles-container {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -120px;
+            border-radius: 50%;
+            opacity: 0;
+            animation: float-bubble linear infinite;
+            will-change: transform, opacity;
+        }
+        .bubble::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%,
+                    rgba(255, 255, 255, .55) 0%,
+                    rgba(245, 158, 11, .18) 18%,
+                    rgba(100, 210, 255, .12) 35%,
+                    rgba(200, 100, 255, .08) 55%,
+                    transparent 75%);
+            border: 1.5px solid rgba(255, 255, 255, .25);
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, .08), 0 4px 20px rgba(245, 158, 11, .06);
+        }
+        .bubble::after {
+            content: '';
+            position: absolute;
+            top: 12%;
+            left: 18%;
+            width: 28%;
+            height: 20%;
+            background: rgba(255, 255, 255, .5);
+            border-radius: 50%;
+            filter: blur(3px);
+            transform: rotate(-30deg);
+        }
+        @keyframes float-bubble {
+            0% {
+                transform: translateY(0) translateX(0) scale(.25);
+                opacity: 0;
+            }
+            8% {
+                opacity: .72;
+            }
+            40% {
+                transform: translateY(-38vh) translateX(22px) scale(1);
+            }
+            60% {
+                transform: translateY(-58vh) translateX(-18px) scale(.95);
+            }
+            85% {
+                opacity: .38;
+            }
+            100% {
+                transform: translateY(-115vh) translateX(12px) scale(.7);
+                opacity: 0;
+            }
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+           AMBIENT ORB GLOWS (from 2.html)
+        ────────────────────────────────────────────────────────────── */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(90px);
+            animation: orb-drift ease-in-out infinite alternate;
+        }
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: rgba(245, 158, 11, .04);
+            top: -100px;
+            right: -150px;
+            animation-duration: 12s;
+        }
+        .orb-2 {
+            width: 350px;
+            height: 350px;
+            background: rgba(100, 200, 255, .03);
+            bottom: 20%;
+            left: -100px;
+            animation-duration: 16s;
+        }
+        @keyframes orb-drift {
+            from {
+                transform: translate(0, 0) scale(1);
+            }
+            to {
+                transform: translate(30px, 20px) scale(1.08);
+            }
         }
 
         /* ──────────────────────────────────────────────────────────────
@@ -364,6 +580,7 @@
             padding: 22px;
             text-align: center;
             background: rgba(255, 255, 255, .02);
+            transition: background .4s;
         }
         .stat+.stat {
             border-left: 1px solid var(--border);
@@ -378,6 +595,22 @@
             color: var(--muted);
             text-transform: uppercase;
             letter-spacing: 1.5px;
+        }
+
+        /* Typing cursor blink */
+        #typingText {
+            border-right: 3px solid var(--primary);
+            padding-right: 4px;
+            animation: blink-cursor .7s step-end infinite;
+        }
+        @keyframes blink-cursor {
+            0%,
+            100% {
+                border-color: var(--primary);
+            }
+            50% {
+                border-color: transparent;
+            }
         }
 
         /* ──────────────────────────────────────────────────────────────
@@ -401,7 +634,7 @@
             transition: all 0.5s ease;
         }
         .portrait-wrapper:hover::before {
-            background: rgba(245, 158, 11, 0.2);
+            background: rgba(245, 158, 11, 0.22);
             filter: blur(80px);
             transform: scale(1.1);
         }
@@ -429,7 +662,7 @@
             position: absolute;
             inset: 0;
             border-radius: 22px;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), transparent 50%, rgba(245, 158, 11, 0.05));
+            background: linear-gradient(135deg, rgba(245, 158, 11, .25), transparent 50%, rgba(245, 158, 11, .05));
             pointer-events: none;
             z-index: 2;
         }
@@ -1087,6 +1320,12 @@
 <body>
 
     <!-- ──────────────────────────────────────────────────────────────
+    AMBIENT ORBS (from 2.html)
+    ────────────────────────────────────────────────────────────── -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <!-- ──────────────────────────────────────────────────────────────
     SCROLL PROGRESS
     ────────────────────────────────────────────────────────────── -->
     <div id="scroll-progress"></div>
@@ -1097,7 +1336,7 @@
     <button id="backToTop" aria-label="Back to top">↑</button>
 
     <!-- ──────────────────────────────────────────────────────────────
-    HEADER
+    HEADER (with theme toggle from 2.html)
     ────────────────────────────────────────────────────────────── -->
     <header class="header">
         <div class="container">
@@ -1109,11 +1348,17 @@
                     <a href="#process">Process</a>
                     <a href="#contact">Contact</a>
                 </nav>
-                <a href="https://www.upwork.com/freelancers/~01011f9fd09e5093b6?mp_source=share" target="_blank" class="hire-btn">Contact Me</a>
-                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
+                <div class="header-right">
+                    <!-- Theme Toggle from 2.html -->
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">
+                        <span class="icon-wrap" id="themeIcon">🌙</span>
+                    </button>
+                    <a href="https://www.upwork.com/freelancers/~01011f9fd09e5093b6?mp_source=share" target="_blank" class="hire-btn">Contact Me</a>
+                    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
+                </div>
             </div>
 
-            <!-- Mobile Nav - Hidden by default, toggled by button -->
+            <!-- Mobile Nav -->
             <div class="mobile-nav" id="mobileNav">
                 <a href="#services">Services</a>
                 <a href="#work">Work</a>
@@ -1125,9 +1370,12 @@
     </header>
 
     <!-- ──────────────────────────────────────────────────────────────
-    HERO
+    HERO (with bubbles from 2.html)
     ────────────────────────────────────────────────────────────── -->
     <section class="hero" id="top">
+        <!-- Bubbles container from 2.html -->
+        <div class="bubbles-container" id="bubblesContainer" aria-hidden="true"></div>
+
         <div class="container">
             <div class="hero-grid">
                 <div>
@@ -1379,7 +1627,7 @@
     </section>
 
     <!-- ──────────────────────────────────────────────────────────────
-    PORTFOLIO
+    PORTFOLIO (30+ projects — all from 1.html, unchanged)
     ────────────────────────────────────────────────────────────── -->
     <section class="section" id="work">
         <div class="container">
@@ -1597,74 +1845,275 @@
     JAVASCRIPT
     ────────────────────────────────────────────────────────────── -->
     <script>
-        // ─── PROJECT DATA ───
+        // ─── PROJECT DATA (30+ projects — all from 1.html, unchanged) ───
         const projects = [
             // ── MOBILE APPS (9) ──
             {
-  id: 10,
-  name: 'Verdant',
-  displayTitle: 'AI Plant Care Mobile App',
-  category: 'mobile',
-  image: 'plant.png',
-  link: 'https://www.figma.com/design/dqeYQXA7Jbrn2as57DEePW/Untitled?node-id=0-1&t=gVx70DYtVGIn3f1P-1',
-  tags: ['Figma', 'AI', 'Plant Care']
-},
-{
-  id: 11,
-  name: 'TIORA',
-  displayTitle: 'Beauty & Skincare Shopping App',
-  category: 'mobile',
-  image: 'beauty.png',
-  link: 'https://www.figma.com/design/E4YiHSAglPvItyaw6BUrsS/Beauty---Product?node-id=0-1&t=avGZx8uiSNcgXqdp-1',
-  tags: ['Figma', 'Beauty', 'E-commerce']
-},
-              { id: 9, name: 'NovaFlow AI', displayTitle: 'AI Marketing Automation App', category: 'mobile', image: 'NovaFlow.png', link: 'https://www.figma.com/design/bw0TOp8rZEj55RHusS1QnZ/Untitled?node-id=0-1&t=docQo6Iyb9yrbFGx-1', tags: ['Figma', 'AI', 'Marketing'] },
-            { id: 6, name: 'LUMO', displayTitle: 'AI-Powered Education App', category: 'mobile', image: 'lumo.png', link: 'https://www.figma.com/design/ZyErg9MwrKPL5Dsvsq3iJV/ED-Tech?node-id=0-1&t=YjrUFrYgZqDxkNnz-1', tags: ['Figma', 'EdTech', 'AI'] },
-            { id: 2, name: 'NovaBank', displayTitle: 'Digital Banking App', category: 'mobile', image: 'NovaBank.png', link: 'https://www.figma.com/design/DTMSEfD5C68pcdk4eC0DBK/Banking-App-Nova?node-id=0-1&t=RMWMycIQfxkbs44M-1', tags: ['Figma', 'Fintech', 'Banking'] },
-            { id: 4, name: 'FlavorGO', displayTitle: 'Food Delivery App', category: 'mobile', image: 'image.png', link: 'https://www.figma.com/design/XxXHX5JMoLTlmvSFiMvHX4/Food-Delivery-complete?node-id=0-1&t=fnc23g6jPiuvCK6L-1', tags: ['Figma', 'Food', 'Delivery'] },
-            { id: 5, name: 'Lamora Market', displayTitle: 'E-Commerce Marketplace', category: 'mobile', image: 'ecommerce copy.png', link: 'https://www.figma.com/design/HMpA8vjYxKs9tmX8espqk7/Ecommerce?node-id=0-1&t=b08Wl8I7vZBcWiTK-1', tags: ['Figma', 'Ecommerce', 'Marketplace'] },
-            { id: 1, name: 'Bolt Rider', displayTitle: 'Ride-Hailing & Transport App', category: 'mobile', image: 'Bolt.png', link: 'https://www.figma.com/design/HG3jjkfhUPfnNBXIE89H8e/Rider-App?node-id=0-1&t=XRzPPFRIB3sB4TUD-1', tags: ['Figma', 'Transport', 'Ride-Hailing'] },
-            { id: 3, name: 'Petcare+', displayTitle: 'Pet Care & Wellness App', category: 'mobile', image: 'PetCare+.png', link: 'https://www.figma.com/design/4gOzJCIwuskNDa0ElUwKno/Untitled?node-id=0-1&t=5Mg7VgBY365QYDcH-1', tags: ['Figma', 'Pet Care', 'Wellness'] },
-            { id: 7, name: 'ELAN MODE', displayTitle: 'Fashion & Lifestyle App', category: 'mobile', image: 'fashion.png', link: 'https://www.figma.com/design/p6ClKnxEvVqPMdSBOVAb9B/Fashion?node-id=0-1&t=hVhI3atOVdogyuLi-1', tags: ['Figma', 'Fashion', 'Lifestyle'] },
-            { id: 8, name: 'Medicare', displayTitle: 'Healthcare & Wellness App', category: 'mobile', image: 'helth.png', link: 'https://www.figma.com/design/Cky7UgZrQZYWCmXDB9jK3X/Medicare?node-id=0-1&t=mejaG61sPwdORgDk-1', tags: ['Figma', 'Healthcare', 'Wellness'] },
-          
+                id: 10,
+                name: 'Verdant',
+                displayTitle: 'AI Plant Care Mobile App',
+                category: 'mobile',
+                image: 'plant.png',
+                link: 'https://www.figma.com/design/dqeYQXA7Jbrn2as57DEePW/Untitled?node-id=0-1&t=gVx70DYtVGIn3f1P-1',
+                tags: ['Figma', 'AI', 'Plant Care']
+            }, {
+                id: 11,
+                name: 'TIORA',
+                displayTitle: 'Beauty & Skincare Shopping App',
+                category: 'mobile',
+                image: 'beauty.png',
+                link: 'https://www.figma.com/design/E4YiHSAglPvItyaw6BUrsS/Beauty---Product?node-id=0-1&t=avGZx8uiSNcgXqdp-1',
+                tags: ['Figma', 'Beauty', 'E-commerce']
+            }, {
+                id: 9,
+                name: 'NovaFlow AI',
+                displayTitle: 'AI Marketing Automation App',
+                category: 'mobile',
+                image: 'NovaFlow.png',
+                link: 'https://www.figma.com/design/bw0TOp8rZEj55RHusS1QnZ/Untitled?node-id=0-1&t=docQo6Iyb9yrbFGx-1',
+                tags: ['Figma', 'AI', 'Marketing']
+            }, {
+                id: 6,
+                name: 'LUMO',
+                displayTitle: 'AI-Powered Education App',
+                category: 'mobile',
+                image: 'lumo.png',
+                link: 'https://www.figma.com/design/ZyErg9MwrKPL5Dsvsq3iJV/ED-Tech?node-id=0-1&t=YjrUFrYgZqDxkNnz-1',
+                tags: ['Figma', 'EdTech', 'AI']
+            }, {
+                id: 2,
+                name: 'NovaBank',
+                displayTitle: 'Digital Banking App',
+                category: 'mobile',
+                image: 'NovaBank.png',
+                link: 'https://www.figma.com/design/DTMSEfD5C68pcdk4eC0DBK/Banking-App-Nova?node-id=0-1&t=RMWMycIQfxkbs44M-1',
+                tags: ['Figma', 'Fintech', 'Banking']
+            }, {
+                id: 4,
+                name: 'FlavorGO',
+                displayTitle: 'Food Delivery App',
+                category: 'mobile',
+                image: 'image.png',
+                link: 'https://www.figma.com/design/XxXHX5JMoLTlmvSFiMvHX4/Food-Delivery-complete?node-id=0-1&t=fnc23g6jPiuvCK6L-1',
+                tags: ['Figma', 'Food', 'Delivery']
+            }, {
+                id: 5,
+                name: 'Lamora Market',
+                displayTitle: 'E-Commerce Marketplace',
+                category: 'mobile',
+                image: 'ecommerce copy.png',
+                link: 'https://www.figma.com/design/HMpA8vjYxKs9tmX8espqk7/Ecommerce?node-id=0-1&t=b08Wl8I7vZBcWiTK-1',
+                tags: ['Figma', 'Ecommerce', 'Marketplace']
+            }, {
+                id: 1,
+                name: 'Bolt Rider',
+                displayTitle: 'Ride-Hailing & Transport App',
+                category: 'mobile',
+                image: 'Bolt.png',
+                link: 'https://www.figma.com/design/HG3jjkfhUPfnNBXIE89H8e/Rider-App?node-id=0-1&t=XRzPPFRIB3sB4TUD-1',
+                tags: ['Figma', 'Transport', 'Ride-Hailing']
+            }, {
+                id: 3,
+                name: 'Petcare+',
+                displayTitle: 'Pet Care & Wellness App',
+                category: 'mobile',
+                image: 'PetCare+.png',
+                link: 'https://www.figma.com/design/4gOzJCIwuskNDa0ElUwKno/Untitled?node-id=0-1&t=5Mg7VgBY365QYDcH-1',
+                tags: ['Figma', 'Pet Care', 'Wellness']
+            }, {
+                id: 7,
+                name: 'ELAN MODE',
+                displayTitle: 'Fashion & Lifestyle App',
+                category: 'mobile',
+                image: 'fashion.png',
+                link: 'https://www.figma.com/design/p6ClKnxEvVqPMdSBOVAb9B/Fashion?node-id=0-1&t=hVhI3atOVdogyuLi-1',
+                tags: ['Figma', 'Fashion', 'Lifestyle']
+            }, {
+                id: 8,
+                name: 'Medicare',
+                displayTitle: 'Healthcare & Wellness App',
+                category: 'mobile',
+                image: 'helth.png',
+                link: 'https://www.figma.com/design/Cky7UgZrQZYWCmXDB9jK3X/Medicare?node-id=0-1&t=mejaG61sPwdORgDk-1',
+                tags: ['Figma', 'Healthcare', 'Wellness']
+            },
 
             // ── WEB DESIGNS (8) ──
             {
-  id: 18,
-  name: 'Crafted',
-  displayTitle: 'Premium Creative Digital Agency',
-  category: 'web',
-  image: 'web.png',
-  link: 'https://www.figma.com/design/MT6xpOajZ8clKHV3pttADo/Untitled?node-id=0-1&p=f&t=HhUzUMCasIBSnBpV-0',
-  tags: ['Figma', 'Agency', 'Creative']
-},
-             { id: 16, name: 'HireFlow', displayTitle: 'Recruitment & Talent Management Platform', category: 'web', image: 'HireFlowHR.png', link: 'https://www.figma.com/design/6RW9GlyEQXqSHPwU6hSi9I/HR-and-Recuitement?node-id=0-1&t=ePPyoQAVm8p9lMYr-1', tags: ['Figma', 'HR', 'Recruitment'] },
-            { id: 11, name: 'GrowthPilot', displayTitle: 'Marketing Analytics & Growth Platform', category: 'web', image: 'GrowthPilot.png', link: 'https://www.figma.com/design/HX52cepqw1SyIFAvCTCIVE/Marketing-Analytics?node-id=0-1&t=fYMwgaGqkeDYqmFM-1', tags: ['Figma', 'SaaS', 'Analytics'] },
-            { id: 12, name: 'SparkNest', displayTitle: 'Architecture & Interior Design Platform', category: 'web', image: 'SparkNest.png', link: 'https://www.figma.com/design/hTnG54xjFtbaZQ8cjXSNqn/Startup--Innovation-Studio?node-id=0-1&t=ZhgmXvvVES46xzL7-1', tags: ['Figma', 'Business', 'Design'] },
-            { id: 13, name: 'Skillora', displayTitle: 'AI-Powered Learning Management Platform', category: 'web', image: 'LearningSkillora.png', link: 'https://www.figma.com/design/n6QIdRTxMIQ0Och2oUwxro/LMS-learning-platform?node-id=0-1&t=alv09U41WrE2askq-1', tags: ['Figma', 'EdTech', 'AI'] },
-            { id: 14, name: 'BuildCore', displayTitle: 'Construction Project Management Platform', category: 'web', image: 'BuildCoreConstruction.png', link: 'https://www.figma.com/design/TD5XMnJCKBg3zywcvzSrY6/Construction-platform?node-id=0-1&t=piGtp4PAyOkMDiBa-1', tags: ['Figma', 'Dashboard', 'Construction'] },
-            { id: 15, name: 'NexLead', displayTitle: 'Global Sales & CRM Platform', category: 'web', image: 'NexLeadCRM.png', link: 'https://www.figma.com/design/tNMeZ6qDcodpjTVhIZTk6U/CRM-Platform?node-id=0-1&t=C2kWL7MIWvSuXlJN-1', tags: ['Figma', 'CRM', 'Sales'] },
-           
-            { id: 17, name: 'Wanderly', displayTitle: 'Travel Booking & Trip Planning Platform', category: 'web', image: 'WanderlyForTravel.png', link: 'https://www.figma.com/design/nWykEODBv9mS4qwk3XOjzx/Travel-Booking?node-id=0-1&t=T4Htnw1eeUUBznNC-1', tags: ['Figma', 'Travel', 'Booking'] },
-            { id: 18, name: 'SyntraAI', displayTitle: 'AI Productivity & Team Collaboration Workspace', category: 'web', image: 'SyntraAI.png', link: 'https://www.figma.com/design/8aKjyjT4RI2JOWEVDeuZLO/Syntra-AI--productivity?node-id=0-1&t=1xcysdfpo4NV6E6y-1', tags: ['Figma', 'AI', 'Productivity'] },
+                id: 18,
+                name: 'Crafted',
+                displayTitle: 'Premium Creative Digital Agency',
+                category: 'web',
+                image: 'web.png',
+                link: 'https://www.figma.com/design/MT6xpOajZ8clKHV3pttADo/Untitled?node-id=0-1&p=f&t=HhUzUMCasIBSnBpV-0',
+                tags: ['Figma', 'Agency', 'Creative']
+            }, {
+                id: 16,
+                name: 'HireFlow',
+                displayTitle: 'Recruitment & Talent Management Platform',
+                category: 'web',
+                image: 'HireFlowHR.png',
+                link: 'https://www.figma.com/design/6RW9GlyEQXqSHPwU6hSi9I/HR-and-Recuitement?node-id=0-1&t=ePPyoQAVm8p9lMYr-1',
+                tags: ['Figma', 'HR', 'Recruitment']
+            }, {
+                id: 11,
+                name: 'GrowthPilot',
+                displayTitle: 'Marketing Analytics & Growth Platform',
+                category: 'web',
+                image: 'GrowthPilot.png',
+                link: 'https://www.figma.com/design/HX52cepqw1SyIFAvCTCIVE/Marketing-Analytics?node-id=0-1&t=fYMwgaGqkeDYqmFM-1',
+                tags: ['Figma', 'SaaS', 'Analytics']
+            }, {
+                id: 12,
+                name: 'SparkNest',
+                displayTitle: 'Architecture & Interior Design Platform',
+                category: 'web',
+                image: 'SparkNest.png',
+                link: 'https://www.figma.com/design/hTnG54xjFtbaZQ8cjXSNqn/Startup--Innovation-Studio?node-id=0-1&t=ZhgmXvvVES46xzL7-1',
+                tags: ['Figma', 'Business', 'Design']
+            }, {
+                id: 13,
+                name: 'Skillora',
+                displayTitle: 'AI-Powered Learning Management Platform',
+                category: 'web',
+                image: 'LearningSkillora.png',
+                link: 'https://www.figma.com/design/n6QIdRTxMIQ0Och2oUwxro/LMS-learning-platform?node-id=0-1&t=alv09U41WrE2askq-1',
+                tags: ['Figma', 'EdTech', 'AI']
+            }, {
+                id: 14,
+                name: 'BuildCore',
+                displayTitle: 'Construction Project Management Platform',
+                category: 'web',
+                image: 'BuildCoreConstruction.png',
+                link: 'https://www.figma.com/design/TD5XMnJCKBg3zywcvzSrY6/Construction-platform?node-id=0-1&t=piGtp4PAyOkMDiBa-1',
+                tags: ['Figma', 'Dashboard', 'Construction']
+            }, {
+                id: 15,
+                name: 'NexLead',
+                displayTitle: 'Global Sales & CRM Platform',
+                category: 'web',
+                image: 'NexLeadCRM.png',
+                link: 'https://www.figma.com/design/tNMeZ6qDcodpjTVhIZTk6U/CRM-Platform?node-id=0-1&t=C2kWL7MIWvSuXlJN-1',
+                tags: ['Figma', 'CRM', 'Sales']
+            }, {
+                id: 17,
+                name: 'Wanderly',
+                displayTitle: 'Travel Booking & Trip Planning Platform',
+                category: 'web',
+                image: 'WanderlyForTravel.png',
+                link: 'https://www.figma.com/design/nWykEODBv9mS4qwk3XOjzx/Travel-Booking?node-id=0-1&t=T4Htnw1eeUUBznNC-1',
+                tags: ['Figma', 'Travel', 'Booking']
+            }, {
+                id: 18,
+                name: 'SyntraAI',
+                displayTitle: 'AI Productivity & Team Collaboration Workspace',
+                category: 'web',
+                image: 'SyntraAI.png',
+                link: 'https://www.figma.com/design/8aKjyjT4RI2JOWEVDeuZLO/Syntra-AI--productivity?node-id=0-1&t=1xcysdfpo4NV6E6y-1',
+                tags: ['Figma', 'AI', 'Productivity']
+            },
 
             // ── LANDING PAGES (8) ──
-            { id: 26, name: 'Elevate Circle', displayTitle: 'Personal Branding Landing Page', category: 'landing', image: 'ElevateCircle.png', link: 'https://www.figma.com/design/ymwaNok0wqnyZgN2jY1qbl/Personal-branding-expert?node-id=0-1&t=EJ0t35h1iBqBDUrc-1', tags: ['Figma', 'Branding', 'Landing'] },
-            { id: 19, name: 'Vaultora', displayTitle: 'Fintech Landing Page', category: 'landing', image: 'Fintech.png', link: 'https://www.figma.com/design/sXebMBd2INHNUgIlB0vqfd/Fintech?node-id=0-1&t=ITywvEKtr7Vtb5kf-1', tags: ['Figma', 'Fintech', 'Landing'] },
-            { id: 21, name: 'FlowPilot AI', displayTitle: 'AI Productivity Landing Page', category: 'landing', image: 'FlowPilot.png', link: 'https://www.figma.com/design/Pbq6UdajHqL31bB9Pow8r4/Ai-Productivity?node-id=0-1&t=u81jBbw3W3vJYnqN-1', tags: ['Figma', 'AI', 'Landing'] },
-            { id: 22, name: 'Axis Coordination', displayTitle: 'Startup & Business Landing Page', category: 'landing', image: 'Axis.png', link: 'https://www.figma.com/design/54CS5XiAnBZxryA4QweLik/Axis-Coordination?node-id=0-1&t=N91VHWu71EHKSpiI-1', tags: ['Figma', 'Startup', 'Landing'] },
-            { id: 23, name: 'Sentinel X', displayTitle: 'Cybersecurity Landing Page', category: 'landing', image: 'intelligence.png', link: 'https://www.figma.com/design/4CusC68pbAaSO4AJJh5Vki/CyberSecurity?node-id=0-1&t=4dmhXOSJwYlf7AUq-1', tags: ['Figma', 'Security', 'Landing'] },
-            { id: 24, name: 'AETHELIS', displayTitle: 'Real Estate Landing Page', category: 'landing', image: 'estate.png', link: 'https://www.figma.com/design/qSF76OM9Pv9TYP1YoXnJpD/Real-Estate?node-id=0-1&t=ALP7x6dsk9F6lbL5-1', tags: ['Figma', 'Real Estate', 'Landing'] },
-            { id: 25, name: 'FreePilot AI', displayTitle: 'AI Operating System Landing Page', category: 'landing', image: 'OSFlowpilot.png', link: 'https://www.figma.com/design/7LzRfy8yOJXtcV4VaLhxRJ/Flow-pilot-Ai-OS?node-id=2-2&t=RuuDbP1yFTuyzW0O-1', tags: ['Figma', 'AI', 'OS'] },
-            { id: 20, name: 'Pawcare', displayTitle: 'Pet Care Landing Page', category: 'landing', image: 'PetCare.png', link: 'https://www.figma.com/design/nhrElvXiEgS5bZfV0IFk2o/Pet-care?node-id=0-1&t=uokVGt9SxrBXQQg3-1', tags: ['Figma', 'Pet Care', 'Landing'] },
-            
+            {
+                id: 26,
+                name: 'Elevate Circle',
+                displayTitle: 'Personal Branding Landing Page',
+                category: 'landing',
+                image: 'ElevateCircle.png',
+                link: 'https://www.figma.com/design/ymwaNok0wqnyZgN2jY1qbl/Personal-branding-expert?node-id=0-1&t=EJ0t35h1iBqBDUrc-1',
+                tags: ['Figma', 'Branding', 'Landing']
+            }, {
+                id: 19,
+                name: 'Vaultora',
+                displayTitle: 'Fintech Landing Page',
+                category: 'landing',
+                image: 'Fintech.png',
+                link: 'https://www.figma.com/design/sXebMBd2INHNUgIlB0vqfd/Fintech?node-id=0-1&t=ITywvEKtr7Vtb5kf-1',
+                tags: ['Figma', 'Fintech', 'Landing']
+            }, {
+                id: 21,
+                name: 'FlowPilot AI',
+                displayTitle: 'AI Productivity Landing Page',
+                category: 'landing',
+                image: 'FlowPilot.png',
+                link: 'https://www.figma.com/design/Pbq6UdajHqL31bB9Pow8r4/Ai-Productivity?node-id=0-1&t=u81jBbw3W3vJYnqN-1',
+                tags: ['Figma', 'AI', 'Landing']
+            }, {
+                id: 22,
+                name: 'Axis Coordination',
+                displayTitle: 'Startup & Business Landing Page',
+                category: 'landing',
+                image: 'Axis.png',
+                link: 'https://www.figma.com/design/54CS5XiAnBZxryA4QweLik/Axis-Coordination?node-id=0-1&t=N91VHWu71EHKSpiI-1',
+                tags: ['Figma', 'Startup', 'Landing']
+            }, {
+                id: 23,
+                name: 'Sentinel X',
+                displayTitle: 'Cybersecurity Landing Page',
+                category: 'landing',
+                image: 'intelligence.png',
+                link: 'https://www.figma.com/design/4CusC68pbAaSO4AJJh5Vki/CyberSecurity?node-id=0-1&t=4dmhXOSJwYlf7AUq-1',
+                tags: ['Figma', 'Security', 'Landing']
+            }, {
+                id: 24,
+                name: 'AETHELIS',
+                displayTitle: 'Real Estate Landing Page',
+                category: 'landing',
+                image: 'estate.png',
+                link: 'https://www.figma.com/design/qSF76OM9Pv9TYP1YoXnJpD/Real-Estate?node-id=0-1&t=ALP7x6dsk9F6lbL5-1',
+                tags: ['Figma', 'Real Estate', 'Landing']
+            }, {
+                id: 25,
+                name: 'FreePilot AI',
+                displayTitle: 'AI Operating System Landing Page',
+                category: 'landing',
+                image: 'OSFlowpilot.png',
+                link: 'https://www.figma.com/design/7LzRfy8yOJXtcV4VaLhxRJ/Flow-pilot-Ai-OS?node-id=2-2&t=RuuDbP1yFTuyzW0O-1',
+                tags: ['Figma', 'AI', 'OS']
+            }, {
+                id: 20,
+                name: 'Pawcare',
+                displayTitle: 'Pet Care Landing Page',
+                category: 'landing',
+                image: 'PetCare.png',
+                link: 'https://www.figma.com/design/nhrElvXiEgS5bZfV0IFk2o/Pet-care?node-id=0-1&t=uokVGt9SxrBXQQg3-1',
+                tags: ['Figma', 'Pet Care', 'Landing']
+            },
 
             // ── DASHBOARDS (4) ──
-            { id: 27, name: 'Commerce OS', displayTitle: 'E-Commerce Analytics Dashboard', category: 'dashboard', image: 'Ecommerce.png', link: 'https://www.figma.com/design/G1Yl69pglqTVawRitQkAPs/Ecommerce-Dashboard?node-id=0-1&t=kFs62bw5zRb3f5f7-1', tags: ['Figma', 'Ecommerce', 'Dashboard'] },
-            { id: 28, name: 'Medicore', displayTitle: 'Healthcare Admin Dashboard', category: 'dashboard', image: 'Medicore.png', link: 'https://www.figma.com/design/Vv7CEOYvOE4NXKOUQjVtoS/MediCore-Dashboard?node-id=0-1&t=FTq6ijPbkukIBJlD-1', tags: ['Figma', 'Healthcare', 'Dashboard'] },
-            { id: 29, name: 'CryptoPulse', displayTitle: 'Cryptocurrency Trading Dashboard', category: 'dashboard', image: 'Crypto.png', link: 'https://www.figma.com/design/W0vtZ6Qnkwgn2s7xn7Lf7z/Crypto-Dashboard?node-id=0-1&t=Cwl8rF8JJowT8DBh-1', tags: ['Figma', 'Crypto', 'Dashboard'] },
-            { id: 30, name: 'InSight AI', displayTitle: 'Business Intelligence Dashboard', category: 'dashboard', image: 'Business.png', link: 'https://www.figma.com/design/4faX9LALRlbkj1pO4eYxCb/Business-Dashbaord?node-id=0-1&t=DjcGzPesXWnqosmf-1', tags: ['Figma', 'Business', 'Dashboard'] }
+            {
+                id: 27,
+                name: 'Commerce OS',
+                displayTitle: 'E-Commerce Analytics Dashboard',
+                category: 'dashboard',
+                image: 'Ecommerce.png',
+                link: 'https://www.figma.com/design/G1Yl69pglqTVawRitQkAPs/Ecommerce-Dashboard?node-id=0-1&t=kFs62bw5zRb3f5f7-1',
+                tags: ['Figma', 'Ecommerce', 'Dashboard']
+            }, {
+                id: 28,
+                name: 'Medicore',
+                displayTitle: 'Healthcare Admin Dashboard',
+                category: 'dashboard',
+                image: 'Medicore.png',
+                link: 'https://www.figma.com/design/Vv7CEOYvOE4NXKOUQjVtoS/MediCore-Dashboard?node-id=0-1&t=FTq6ijPbkukIBJlD-1',
+                tags: ['Figma', 'Healthcare', 'Dashboard']
+            }, {
+                id: 29,
+                name: 'CryptoPulse',
+                displayTitle: 'Cryptocurrency Trading Dashboard',
+                category: 'dashboard',
+                image: 'Crypto.png',
+                link: 'https://www.figma.com/design/W0vtZ6Qnkwgn2s7xn7Lf7z/Crypto-Dashboard?node-id=0-1&t=Cwl8rF8JJowT8DBh-1',
+                tags: ['Figma', 'Crypto', 'Dashboard']
+            }, {
+                id: 30,
+                name: 'InSight AI',
+                displayTitle: 'Business Intelligence Dashboard',
+                category: 'dashboard',
+                image: 'Business.png',
+                link: 'https://www.figma.com/design/4faX9LALRlbkj1pO4eYxCb/Business-Dashbaord?node-id=0-1&t=DjcGzPesXWnqosmf-1',
+                tags: ['Figma', 'Business', 'Dashboard']
+            }
         ];
 
         const categoryLabels = {
@@ -1682,9 +2131,9 @@
         function renderProjects(category = 'all') {
             projectGrid.innerHTML = '';
 
-            const filteredProjects = category === 'all'
-                ? projects
-                : projects.filter(p => p.category === category);
+            const filteredProjects = category === 'all' ?
+                projects :
+                projects.filter(p => p.category === category);
 
             filteredProjects.forEach((project, index) => {
                 const card = document.createElement('a');
@@ -1713,39 +2162,39 @@
                 let imageHTML = '';
                 if (project.image) {
                     imageHTML = `
-                        <div class="project-image">
-                            <img
-                                src="${project.image}"
-                                alt="${project.displayTitle}"
-                                loading="lazy"
-                                onerror="this.onerror=null; this.src='https://placehold.co/800x500/1a2332/F59E0B?text=${encodeURIComponent(project.name)}';"
-                            />
-                        </div>
-                    `;
+                                <div class="project-image">
+                                    <img
+                                        src="${project.image}"
+                                        alt="${project.displayTitle}"
+                                        loading="lazy"
+                                        onerror="this.onerror=null; this.src='https://placehold.co/800x500/1a2332/F59E0B?text=${encodeURIComponent(project.name)}';"
+                                    />
+                                </div>
+                            `;
                 } else {
                     imageHTML = `
-                        <div class="project-image">
-                            <img
-                                src="https://placehold.co/800x500/1a2332/F59E0B?text=${encodeURIComponent(project.name)}"
-                                alt="${project.name}"
-                            />
-                        </div>
-                    `;
+                                <div class="project-image">
+                                    <img
+                                        src="https://placehold.co/800x500/1a2332/F59E0B?text=${encodeURIComponent(project.name)}"
+                                        alt="${project.name}"
+                                    />
+                                </div>
+                            `;
                 }
 
-                const tagsHTML = project.tags && project.tags.length
-                    ? project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('')
-                    : '';
+                const tagsHTML = project.tags && project.tags.length ?
+                    project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('') :
+                    '';
 
                 card.innerHTML = `
-                    ${imageHTML}
-                    <div class="project-content">
-                        <h3 class="project-title">${project.displayTitle}</h3>
-                        <p class="project-name">${project.name}</p>
-                        ${tagsHTML ? `<div class="project-tags">${tagsHTML}</div>` : ''}
-                        <span class="project-link">View Case Study →</span>
-                    </div>
-                `;
+                            ${imageHTML}
+                            <div class="project-content">
+                                <h3 class="project-title">${project.displayTitle}</h3>
+                                <p class="project-name">${project.name}</p>
+                                ${tagsHTML ? `<div class="project-tags">${tagsHTML}</div>` : ''}
+                                <span class="project-link">View Case Study →</span>
+                            </div>
+                        `;
 
                 card.style.opacity = '0';
                 card.style.transform = 'translateY(30px)';
@@ -1954,17 +2403,83 @@
         });
 
         /* ──────────────────────────────────────────────────────────────
+           THEME TOGGLE (from 2.html)
+        ────────────────────────────────────────────────────────────── */
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode');
+            themeIcon.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            themeIcon.textContent = isLight ? '☀️' : '🌙';
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            // Spin delight
+            themeIcon.style.transition = 'transform .45s cubic-bezier(.22,1,.36,1)';
+            themeIcon.style.transform = 'rotate(360deg)';
+            setTimeout(() => {
+                themeIcon.style.transform = 'none';
+                themeIcon.style.transition = '';
+            }, 450);
+        });
+
+        /* ──────────────────────────────────────────────────────────────
+           SOAP BUBBLE GENERATOR (from 2.html)
+        ────────────────────────────────────────────────────────────── */
+        const bubbleContainer = document.getElementById('bubblesContainer');
+        const BUBBLE_COLORS = [
+            'rgba(245,158,11,.2)',
+            'rgba(100,210,255,.17)',
+            'rgba(200,100,255,.14)',
+            'rgba(100,255,180,.12)',
+            'rgba(255,140,100,.15)',
+        ];
+
+        function spawnBubble() {
+            const b = document.createElement('div');
+            b.className = 'bubble';
+            const size = Math.random() * 56 + 18; // 18–74 px
+            const posX = Math.random() * 98;
+            const duration = Math.random() * 9 + 7; // 7–16 s
+            const delay = Math.random() * 3;
+            const color = BUBBLE_COLORS[Math.floor(Math.random() * BUBBLE_COLORS.length)];
+
+            b.style.cssText = [
+                'width:' + size + 'px',
+                'height:' + size + 'px',
+                'left:' + posX + '%',
+                'animation-duration:' + duration + 's',
+                'animation-delay:' + delay + 's',
+                'background: radial-gradient(circle at 35% 30%, ' + color + ', transparent 70%)',
+            ].join(';');
+
+            bubbleContainer.appendChild(b);
+            setTimeout(() => {
+                if (b.parentNode) b.remove();
+            }, (duration + delay + 1.5) * 1000);
+        }
+
+        // Initial burst
+        for (let i = 0; i < 12; i++) spawnBubble();
+        setInterval(spawnBubble, 900);
+
+        /* ──────────────────────────────────────────────────────────────
            INIT
         ────────────────────────────────────────────────────────────── */
         renderProjects('all');
 
         console.log('🚀 Portfolio loaded successfully!');
-        console.log('📊 29 projects total');
-        console.log('📱 9 Mobile Apps');
-        console.log('🌐 8 Web Designs');
+        console.log('📊 30+ projects total');
+        console.log('📱 11 Mobile Apps');
+        console.log('🌐 9 Web Designs');
         console.log('📄 8 Landing Pages');
         console.log('📊 4 Dashboards');
         console.log('📸 Your photo: jp.jpeg');
+        console.log('🌓 Theme toggle + 🫧 Bubble animation merged from 2.html');
     </script>
 
 </body>
